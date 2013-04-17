@@ -1,5 +1,7 @@
 <?
-// Just put this anywhere you store the pics, it'll recurse but it's not at all efficient
+
+// @TODO bootstrap for presentation? Build pagination
+
 print "<pre>";
 
 $pi = pathinfo($_SERVER['SCRIPT_FILENAME']);
@@ -8,18 +10,18 @@ $path = $pi['dirname'];
 showImages($path, false);
 
 function showImages($path, $subdirectory) {
-    //echo "<br />\nShowing images for: " . $path;
-    //$d = dir($path);
-    //while(false !== ($file = $d->read())) {
+    
     $files = scandir($path, 1);
-    foreach ($files as $file) {
+    
+    $piclimit = 50;
 
+    $i = 0;
+    foreach ($files as $file) {
+        if ($i > $piclimit) exit;
         $fpfile = $path . '/' . $file; // full filepath
-        //echo "\n<br />Switching file: " . $file;
         switch($file) {
             case ".":
             case "..":
-
             break;
 
             default:
@@ -32,7 +34,6 @@ function showImages($path, $subdirectory) {
                         case "gif":
                         case "jpeg":
                         case "png":
-                            //echo "\n<br />show file: " . $fpfile . " -- " . basename($path);
                             if ($imsize = getimagesize($fpfile)) {
                                 $imgsrc = ($subdirectory) ? basename($path) . '/' . $file : $file;
                                 echo '<img border="0" width="640" alt="' . $file . '" src="' . $imgsrc . '" /><br /><hr /><br />';
@@ -43,6 +44,6 @@ function showImages($path, $subdirectory) {
                 }
         }
 
+        $i++;
     }
-
 }
